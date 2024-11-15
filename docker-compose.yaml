@@ -5,29 +5,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python3 api/main.py
+    command: python3 api/tasks.py
     restart: always
     env_file:
       - .env
     networks:
       - app-network
 
-  bot:
+  celery:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python3 bot/main.py
-    restart: always
-    env_file:
-      - .env
-    networks:
-      - app-network
-
-  scheduler:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: python3 scheduler/main.py
+    command: celery_tasks -A celery_worker.app beat --loglevel=info
     restart: always
     env_file:
       - .env

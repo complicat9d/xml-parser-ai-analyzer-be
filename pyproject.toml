@@ -6,7 +6,7 @@ exclude = '''
     \.git
   | data
   | .venv
-  | alembic
+  | migrations
 )
 '''
 

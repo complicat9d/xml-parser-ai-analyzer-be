@@ -11,11 +11,9 @@ class Settings(BaseSettings):
     DATABASE_PASSWORD: str
     DATABASE_DB: str
 
-    TOKEN: str
-    BOT_NAME: str
-    WEBAPP_URL: str
-
-    SCHEDULER_DELAY: int = 1
+    OPEN_API_KEY: str
+    XML_URL: str
+    CELERY_BROKER_URL: str
 
     DEBUG_ENGINE: bool = False
 
