@@ -16,10 +16,38 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: celery_tasks -A celery_worker.app beat --loglevel=info
+    command: celery -A celery_tasks.conf --loglevel=info
     restart: always
     env_file:
       - .env
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A celery_tasks.conf beat --loglevel=info
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A celery_tasks.conf flower --loglevel=info
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - redis
     networks:
       - app-network
 
@@ -49,6 +77,14 @@ services:
       - .env
     depends_on:
       - db
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxclients 10000
+    ports:
+      - "6379:6379"
     networks:
       - app-network
 

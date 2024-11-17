@@ -11,9 +11,12 @@ class Settings(BaseSettings):
     DATABASE_PASSWORD: str
     DATABASE_DB: str
 
-    OPEN_API_KEY: str
+    API_KEY: str
+
     XML_URL: str
+
     CELERY_BROKER_URL: str
+    CELERY_RESULT_BACKEND_URL: str
 
     DEBUG_ENGINE: bool = False
 

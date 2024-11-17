@@ -15,11 +15,13 @@ celery = "*"
 openai = "*"
 alembic = "*"
 httpx = "*"
-flower = "*"
+backoff = "*"
+redis = "*"
 
 [dev-packages]
 black = "*"
 pytest = "*"
+flower = "*"
 
 [requires]
 python_version = "3.12"

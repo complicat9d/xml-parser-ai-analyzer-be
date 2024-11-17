@@ -1,14 +1,16 @@
-import asyncio
-
 import openai
+import backoff
+
 from typing import List
 
 from schemas.product import ProductSchema
+from utils.log import logger
 from config import settings
 
-openai.api_key = settings.OPEN_API_KEY
+openai.api_key = settings.API_KEY
 
 
+@backoff.on_exception(backoff.expo, openai.RateLimitError)
 def generate_report(sales: List[ProductSchema]) -> str:
     total_revenue = sum(product.quantity * product.price for product in sales)
     top_products = sorted(sales, key=lambda x: x.quantity, reverse=True)[:3]
@@ -26,20 +28,21 @@ def generate_report(sales: List[ProductSchema]) -> str:
     3. Распределение по категориям: {categories}
     Составь краткий аналитический отчет с выводами и рекомендациями.
     """
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt},
-        ],
-    )
 
-    return response["choices"][0]["message"]["content"].strip()
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo-instruct",
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+        return response.choices[0].message.content
+    except openai.RateLimitError:
+        logger.warning("The limit of tokens for the given API key has been exceeded")
+    except openai.NotFoundError:
+        logger.warning(
+            "The given model name does not exist or you do not have access to it"
+        )
 
 
 if __name__ == "__main__":
-
-    async def main():
-        print(await generate_report([]))
-
-    asyncio.run(main())
+    print(generate_report([]))
