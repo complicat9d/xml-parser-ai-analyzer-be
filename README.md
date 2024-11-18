@@ -23,6 +23,30 @@
 
 ## Как запустить проект
 
+Перед созданием образов в Docker нужно конфигурировать переменные окружения:
+```.env-example
+DATABASE_USER=
+DATABASE_PASSWORD=
+DATABASE_DB=
+
+API_KEY=
+
+XML_URL=
+
+CELERY_BROKER_URL=
+CELERY_RESULT_BACKEND_URL=
+```
+
+`XML_URL` - ссылка для получения `.xml` файлов
+
+`API_KEY` - ключ для взаимодействия с API OpenAI
+
+Если есть креды для конфигурированной базы данных или ссылка брокера Celery, то нужно **явно** задать следующие переменные в `.env`:
+
+`DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_DB` - по умолчанию `postgres`
+
+`CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND_URL` - по умолчанию `redis://redis:6379/0`
+
 Для настройки и запуска проекта требуется установить **Docker** и **Docker Compose**. После установки выполните следующие шаги:
 
 1. **Сборка Docker образов**:  
