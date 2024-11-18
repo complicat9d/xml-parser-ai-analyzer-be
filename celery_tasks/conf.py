@@ -8,6 +8,7 @@ app = Celery("tasks")
 app.conf.broker_url = settings.CELERY_BROKER_URL
 app.conf.result_backend = settings.CELERY_RESULT_BACKEND_URL
 
+app.conf.beat_schedule_filename = "celerybeat-schedule"
 app.conf.update(
     beat_schedule={
         "fetch_xml_every_midnight": {

@@ -60,6 +60,7 @@ async def fetch_data_from_xml():
 
 @router.get("/task-status/{task_id}", status_code=status.HTTP_200_OK)
 async def get_task_status(task_id: str):
+    """Интеграция эндпоинта для просмотра таски по заданному task_id, также эту информацию можно просматривать в celery flower"""
     task_result = AsyncResult(task_id, app=celery_app)
 
     if task_result.state == "PENDING":
