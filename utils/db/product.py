@@ -1,7 +1,6 @@
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
 from typing import List
-from celery import shared_task
 
 import database.models as m
 from schemas.product import ProductSchema

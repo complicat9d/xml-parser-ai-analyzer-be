@@ -15,8 +15,8 @@ class Settings(BaseSettings):
 
     XML_URL: str
 
-    CELERY_BROKER_URL: str
-    CELERY_RESULT_BACKEND_URL: str
+    CELERY_BROKER_URL: str = "redis://localhost:6379/0"
+    CELERY_RESULT_BACKEND_URL: str = "redis://localhost:6379/0"
 
     DEBUG_ENGINE: bool = False
 

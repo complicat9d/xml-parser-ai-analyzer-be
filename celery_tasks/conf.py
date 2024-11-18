@@ -11,7 +11,7 @@ app.conf.result_backend = settings.CELERY_RESULT_BACKEND_URL
 app.conf.update(
     beat_schedule={
         "fetch_xml_every_midnight": {
-            "task": "celery_tasks.tasks.fetch_and_process_sales_data",
+            "task": "data:fetch",
             "schedule": crontab(hour="0", minute="0"),
         },
     },

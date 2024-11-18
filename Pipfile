@@ -16,11 +16,11 @@ httpx = "*"
 backoff = "*"
 redis = "*"
 psycopg2 = "*"
+flower = "*"
 
 [dev-packages]
 black = "*"
 pytest = "*"
-flower = "*"
 
 [requires]
 python_version = "3.12"

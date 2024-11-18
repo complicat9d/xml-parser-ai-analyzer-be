@@ -1,7 +1,6 @@
 import openai
 import backoff
 from typing import List
-from celery import shared_task
 
 from schemas.product import ProductSchema
 from utils.log import logger

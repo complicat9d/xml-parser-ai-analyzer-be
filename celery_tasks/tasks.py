@@ -14,7 +14,7 @@ from config import settings
     retry_backoff=True,
     name="data:fetch",
 )
-def fetch_and_process_sales_data(self):
+def fetch_and_process_sales_data(self):  # noqa
     xml_content = fetch_xml_data(settings.XML_URL)
     date, products = parse_xml(xml_content)
     with sync_session() as session:
