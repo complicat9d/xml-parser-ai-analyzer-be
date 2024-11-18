@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "db6be3e90ad079e3695d756bf504459709429129fcc90fde51cec92f2be4bd9a"
+            "sha256": "aef25443e13b68480bc0fdf538cb9d193a35d038bf3b20c5fa73fdb7e4eb99bc"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -65,6 +65,15 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==4.2.1"
+        },
+        "cachetools": {
+            "hashes": [
+                "sha256:02134e8439cdc2ffb62023ce1debca2944c3f289d66bb17ead3ab3dede74b292",
+                "sha256:2cc24fb4cbe39633fb7badd9db9ca6295d766d9c2995f245725a46715d050f2a"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==5.5.0"
         },
         "celery": {
             "hashes": [

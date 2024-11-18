@@ -17,6 +17,7 @@ backoff = "*"
 redis = "*"
 psycopg2 = "*"
 flower = "*"
+cachetools = "*"
 
 [dev-packages]
 black = "*"
