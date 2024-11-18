@@ -3,14 +3,20 @@ import pytest
 from datetime import datetime
 
 from utils.xml_utils import parse_xml, fetch_xml_data
+from utils.db.product import save_products
+from utils.db.sale import create_sale
+from tests.test_conf import dbsession, engine  # noqa
 
 
-def test_data_fetch():
+def test_data_fetch(dbsession):
     try:
         xml_content = fetch_xml_data("http://localhost:8000/api/test/xml")
         date, products = parse_xml(xml_content)
         sample_1 = products[0]
         sample_2 = products[1]
+
+        sale_id = create_sale(date, dbsession)
+        save_products(products, sale_id, dbsession)
         assert date == datetime.strptime("2024-01-01", "%Y-%m-%d")
         assert (
             sample_1.product_id,

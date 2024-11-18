@@ -1,6 +1,6 @@
 import pytest
 import redis
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 
 from database.models import Base
@@ -17,7 +17,8 @@ def test_check_db():
         raise Exception("Use local database only!")
 
 
-def test_db_connection():
+@pytest.fixture(scope="session")
+def engine():
     test_check_db()
 
     e = create_engine(db_url, echo=False, max_overflow=25)
@@ -25,14 +26,19 @@ def test_db_connection():
     try:
         with e.begin() as con:
             Base.metadata.create_all(con)
+
+        yield e
     finally:
         with e.begin() as con:
             Base.metadata.drop_all(con)
+            # alembic_version should be dropped as well, as the next time we do alembic upgrade head
+            # it won't do any changes
+            con.execute(text("DROP TABLE IF EXISTS alembic_version"))
 
 
 @pytest.fixture
 def dbsession(engine) -> Session:
-    with Session(bind=engine) as session:
+    with Session(bind=engine) as session, session.begin():
         yield session
 
 
