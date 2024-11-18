@@ -1,3 +1,8 @@
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+
 [tool.black]
 target-version = ['py310']
 include = '\.pyi?$'
