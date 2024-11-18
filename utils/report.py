@@ -1,7 +1,7 @@
 import openai
 import backoff
-
 from typing import List
+from celery import shared_task
 
 from schemas.product import ProductSchema
 from utils.log import logger
@@ -11,14 +11,14 @@ openai.api_key = settings.API_KEY
 
 
 @backoff.on_exception(backoff.expo, openai.RateLimitError)
-def generate_report(sales: List[ProductSchema]) -> str:
-    total_revenue = sum(product.quantity * product.price for product in sales)
-    top_products = sorted(sales, key=lambda x: x.quantity, reverse=True)[:3]
+def generate_report(products: List[ProductSchema]) -> str:
+    total_revenue = sum(product.quantity * product.price for product in products)
+    top_products = sorted(products, key=lambda x: x.quantity, reverse=True)[:3]
     categories = {
         category: sum(
-            product.quantity for product in sales if product.category == category
+            product.quantity for product in products if product.category == category
         )
-        for category in set(product.category for product in sales)
+        for category in set(product.category for product in products)
     }
 
     prompt = f"""
@@ -42,7 +42,3 @@ def generate_report(sales: List[ProductSchema]) -> str:
         logger.warning(
             "The given model name does not exist or you do not have access to it"
         )
-
-
-if __name__ == "__main__":
-    print(generate_report([]))

@@ -1,19 +1,15 @@
 import httpx
-import asyncio
 import xml.etree.ElementTree as ET
 from pydantic import ValidationError
 from typing import List, Tuple
 from datetime import datetime
 
-
 from schemas.product import ProductSchema
 from utils.log import logger
-from config import settings
 
 
-def parse_xml(filename: str) -> Tuple[datetime, List[ProductSchema]]:
-    tree = ET.parse(filename)
-    root = tree.getroot()
+def parse_xml(xml_data: str) -> Tuple[datetime, List[ProductSchema]]:
+    root = ET.fromstring(xml_data)
 
     date_str = root.attrib["date"]
     date = datetime.strptime(date_str, "%Y-%m-%d")
@@ -39,8 +35,8 @@ def parse_xml(filename: str) -> Tuple[datetime, List[ProductSchema]]:
     return date, product_schemas
 
 
-def fetch_xml_data() -> str:
+def fetch_xml_data(url: str) -> str:
     with httpx.Client() as client:
-        response = client.get(settings.XML_URL)
+        response = client.get(url)
         response.raise_for_status()
         return response.text

@@ -5,8 +5,6 @@ name = "pypi"
 
 [packages]
 sqlalchemy = "*"
-asyncpg = "*"
-greenlet = "*"
 fastapi = "*"
 uvicorn = "*"
 pydantic = "*"
@@ -17,6 +15,7 @@ alembic = "*"
 httpx = "*"
 backoff = "*"
 redis = "*"
+psycopg2 = "*"
 
 [dev-packages]
 black = "*"

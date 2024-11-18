@@ -1,24 +1,23 @@
 import sqlalchemy as sa
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from typing import List
+from celery import shared_task
 
 import database.models as m
-from database.session import async_session
 from schemas.product import ProductSchema
 
 
-async def save_products(products: List[ProductSchema], sale_id: int):
-    async with async_session() as session:
-        data = [
-            {
-                m.Product.product_id: product.product_id,
-                m.Product.sale_id: sale_id,
-                m.Product.name: product.name,
-                m.Product.price: product.price,
-                m.Product.category: product.category,
-                m.Product.quantity: product.quantity,
-            }
-            for product in products
-        ]
-        q = sa.insert(m.Product).values(data)
-        await session.execute(q)
+def save_products(products: List[ProductSchema], sale_id: int, session: Session):
+    data = [
+        {
+            m.Product.product_id: product.product_id,
+            m.Product.sale_id: sale_id,
+            m.Product.name: product.name,
+            m.Product.price: product.price,
+            m.Product.category: product.category,
+            m.Product.quantity: product.quantity,
+        }
+        for product in products
+    ]
+    q = sa.insert(m.Product).values(data)
+    session.execute(q)

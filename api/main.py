@@ -6,7 +6,7 @@ from starlette.responses import JSONResponse
 from contextlib import asynccontextmanager
 from celery.result import AsyncResult
 
-from database.session import session_dep
+from api.routes.test import test_router
 from celery_tasks.tasks import fetch_and_process_sales_data
 from celery_tasks.conf import app as celery_app  # noqa
 
@@ -49,10 +49,11 @@ async def debug_exception_handler(request: Request, exc: Exception):
 
 
 router = APIRouter(prefix="/api")
+router.include_router(test_router)
 
 
 @router.get("/process-data", status_code=status.HTTP_200_OK)
-async def fetch_data_from_xml(session: session_dep):
+async def fetch_data_from_xml():
     task = fetch_and_process_sales_data.apply_async()
     return JSONResponse({"task_id": task.id})
 

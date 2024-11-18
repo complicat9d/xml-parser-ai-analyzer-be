@@ -1,14 +1,16 @@
 from fastapi import Depends
 from typing import Annotated
-from contextlib import asynccontextmanager
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from contextlib import contextmanager
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
 
 from config import settings
 
 
 db_url = (
-    f"postgresql+asyncpg://"
+    f"postgresql://"
     f"{settings.DATABASE_USER}:"
     f"{settings.DATABASE_PASSWORD}@"
     f"{settings.DATABASE_HOST}:"
@@ -24,7 +26,7 @@ def get_engine():
     if _engine is not None:
         return _engine
 
-    _engine = create_async_engine(
+    _engine = create_engine(
         db_url,
         echo=settings.DEBUG_ENGINE,
         max_overflow=25,
@@ -32,11 +34,11 @@ def get_engine():
     return _engine
 
 
-async def _get_async_session() -> AsyncSession:
-    async with AsyncSession(get_engine()) as session, session.begin():
+def _get_session() -> AsyncSession:
+    with Session(get_engine()) as session, session.begin():
         yield session
 
 
-async_session_dep: AsyncSession = Depends(_get_async_session)
-session_dep = Annotated[AsyncSession, async_session_dep]
-async_session = asynccontextmanager(_get_async_session)
+sync_session = contextmanager(_get_session)
+sync_session_dep: Session = Depends(_get_session)
+session_dep = Annotated[Session, sync_session_dep]
